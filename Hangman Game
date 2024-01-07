@@ -1,0 +1,70 @@
+# Hangman Game
+
+import time
+import csv
+import random
+import winsound
+
+while True:
+    name = input("What is your name? ")
+    if name is not type(str):
+        break
+    else:
+        print("Please enter your name again!")
+
+print("Hello", name, 'Welcome to Hangman')
+
+time.sleep(1)
+print("I'm thinking of a word")
+for i in range(3):
+    print(i)
+    time.sleep(1)
+
+words = []
+
+with open('./word_list.csv', 'r') as f:
+    reader = csv.reader(f)
+    next(reader)
+    for c in reader:
+        words.append(c)
+
+random.shuffle(words)
+
+q = random.choice(words)
+
+word = "q[0]".strip()
+
+guesses = ''
+
+turns = 5
+
+while turns > 0:
+    failed = 0
+    for ch in word:
+        if ch in guesses:
+            print(ch, end=' ')
+        else:
+            print("_", end=' ')
+            failed += 1
+    if failed == 0:
+        winsound.PlaySound("winsound.SND_FILENAME")
+        print('You win!')
+        break
+
+        print()
+
+    print('Hint: {}'.format(q[1].strip()))
+    guess = input("Guess words: ")
+
+    guesses += guess
+
+    if guess not in word:
+        turns -= 1
+        print('Wrong Answer')
+        print('You have ', turns, ' guesses left.')
+    else:
+        print('Correct! More Guess it')
+
+if turns == 0:
+    winsound.PlaySound('winsound.SND_FILENAME')
+    print("You Lose....")
